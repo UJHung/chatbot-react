@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
-import { IconMessageChatbotFilled, IconChevronDown } from "@tabler/icons-react";
+import { IconMessageChatbotFilled, IconMinus } from "@tabler/icons-react";
 import ChatForm from "./components/Chatform";
 import ChatMessage from "./components/ChatMessage";
 
 const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
+  const [showChatbot, setShowChatbot] = useState(false);
   const chatBodyRef = useRef(null);
 
   const updateHistory = (botText) => {
@@ -23,8 +24,6 @@ const App = () => {
 
   const generateBotResponse = async (history) => {
     // Placeholder for bot response generation logic
-    console.log(history);
-
     history = history.map(({ role, text }) => ({
       role,
       parts: [{ text }],
@@ -51,8 +50,6 @@ const App = () => {
         return;
       }
 
-      console.log("Bot response data:", data);
-
       // Extract bot response text from Gemini API response
       const botText =
         data.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -76,21 +73,31 @@ const App = () => {
 
   return (
     <div className="container">
-      <div className="chatbot-popup">
+      <button
+        className="chatbot-toggler"
+        onClick={() => setShowChatbot((prev) => !prev)}
+      >
+        <IconMessageChatbotFilled />
+      </button>
+
+      <div className={`chatbot-popup ${showChatbot ? "show" : ""}`}>
         {/* Chatbot header */}
         <div className="chat-header">
           <div className="header-info">
             <IconMessageChatbotFilled />
             <h2 className="logo-text">Chatbot</h2>
           </div>
-          <button>
-            <IconChevronDown />
+          <button
+            className="button-minimize"
+            onClick={() => setShowChatbot((prev) => !prev)}
+          >
+            <IconMinus size={16} />
           </button>
         </div>
 
         {/* Chatbot body */}
         <div ref={chatBodyRef} className="chat-body">
-          <div className="message bot-message">
+          <div className="message model-message">
             <div className="message-content">
               <p>Hello! How can I assist you today?</p>
             </div>
@@ -104,6 +111,7 @@ const App = () => {
         {/* Chatbot footer */}
         <div className="chat-footer">
           <ChatForm
+            showChatbot={showChatbot}
             chatHistory={chatHistory}
             setChatHistory={setChatHistory}
             generateBotResponse={generateBotResponse}
