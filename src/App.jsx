@@ -1,6 +1,10 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { IconMessageChatbotFilled, IconMinus } from "@tabler/icons-react";
+import {
+  IconX,
+  IconMessageChatbotFilled,
+  IconMinus,
+} from "@tabler/icons-react";
 import ChatForm from "./components/Chatform";
 import ChatMessage from "./components/ChatMessage";
 
@@ -72,12 +76,13 @@ const App = () => {
   }, [chatHistory]);
 
   return (
-    <div className="container">
+    <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
       <button
         className="chatbot-toggler"
         onClick={() => setShowChatbot((prev) => !prev)}
       >
-        <IconMessageChatbotFilled />
+        <IconMessageChatbotFilled className="icon-chatbot" />
+        <IconX className="icon-close" />
       </button>
 
       <div className={`chatbot-popup ${showChatbot ? "show" : ""}`}>
