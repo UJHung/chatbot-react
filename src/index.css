@@ -184,3 +184,31 @@ body {
 .chat-form button:hover {
   background: linear-gradient(135deg, #3b5bdb, #3b5bdb);
 }
+
+@media (max-width: 520px) {
+  .chatbot-toggler {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .chatbot-popup {
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .chatbot-popup .chat-header {
+    padding: 12px 16px;
+  }
+
+  .chat-body {
+    height: calc(100vh - 136px);
+    padding: 16px;
+  }
+
+  .chat-footer {
+    padding: 16px;
+  }
+}
