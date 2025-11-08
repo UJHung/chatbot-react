@@ -1,7 +1,13 @@
-import { IconArrowUp } from "@tabler/icons-react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
-const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
+import { IconArrowUp } from "@tabler/icons-react";
+
+const ChatForm = ({
+  showChatbot,
+  chatHistory,
+  setChatHistory,
+  generateBotResponse,
+}) => {
   const inputRef = useRef(null);
 
   const handleSubmit = (e) => {
@@ -28,6 +34,13 @@ const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
       generateBotResponse([...chatHistory, { role: "user", text: input }]);
     }, 500);
   };
+
+  useEffect(() => {
+    // Clear input field when chatbot is shown
+    if (showChatbot) {
+      inputRef.current.value = "";
+    }
+  }, [showChatbot]);
 
   return (
     <form action="#" className="chat-form" onSubmit={handleSubmit}>
