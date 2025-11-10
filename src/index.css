@@ -160,6 +160,17 @@ body {
   background-color: #f7f7f7;
 }
 
+.message-thinking {
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  color: #b5b5b5;
+}
+
+.message-thinking span {
+  padding-bottom: 2px;
+}
+
 .chat-body .user-message .message-content {
   background-color: #4c6ef5;
   color: #fff;
