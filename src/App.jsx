@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import {
   IconX,
@@ -7,73 +7,11 @@ import {
 } from "@tabler/icons-react";
 import ChatForm from "./components/Chatform";
 import ChatMessage from "./components/ChatMessage";
+import useChat from "./hook/useChat";
 
 const App = () => {
-  const [chatHistory, setChatHistory] = useState([]);
+  const { isLoading, chatHistory, chatBodyRef, handleSendMessage } = useChat();
   const [showChatbot, setShowChatbot] = useState(false);
-  const chatBodyRef = useRef(null);
-
-  const updateHistory = (botText) => {
-    setChatHistory((prevHistory) => {
-      // Remove the last "Thinking..." message
-      const newHistory = prevHistory.filter(
-        (msg, index) =>
-          !(index === prevHistory.length - 1 && msg.text === "Thinking...")
-      );
-
-      // Add the actual bot response
-      return [...newHistory, { role: "model", text: botText }];
-    });
-  };
-
-  const generateBotResponse = async (history) => {
-    // Placeholder for bot response generation logic
-    history = history.map(({ role, text }) => ({
-      role,
-      parts: [{ text }],
-    }));
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": import.meta.env.VITE_API_KEY,
-      },
-      body: JSON.stringify({ contents: history }),
-    };
-
-    try {
-      const response = await fetch(
-        import.meta.env.VITE_API_URL,
-        requestOptions
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(data.error?.message || "Failed to get bot response");
-        return;
-      }
-
-      // Extract bot response text from Gemini API response
-      const botText =
-        data.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Sorry, I couldn't generate a response.";
-
-      updateHistory(botText);
-    } catch (error) {
-      console.error("Error fetching bot response:", error);
-    }
-  };
-
-  useEffect(() => {
-    // Scroll to bottom when chatHistory updates
-    if (chatBodyRef.current) {
-      chatBodyRef.current.scrollTo({
-        top: chatBodyRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [chatHistory]);
 
   return (
     <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
@@ -102,9 +40,33 @@ const App = () => {
 
         {/* Chatbot body */}
         <div ref={chatBodyRef} className="chat-body">
-          <div className="message model-message">
-            <div className="message-content">
-              <p>Hello! How can I assist you today?</p>
+          <div className="welcome-message">
+            <div className="welcome-icon">
+              <IconMessageChatbotFilled size="24" />
+            </div>
+            <h3>Hello, What can I help you today?</h3>
+            <p>
+              Choose a prompt below or type your own message to get started.
+            </p>
+            <div className="example-prompts">
+              <button
+                className="example-prompt"
+                onClick={() => {
+                  handleSendMessage(
+                    "Tell me something random and interesting!"
+                  );
+                }}
+              >
+                Tell me something random and interesting!
+              </button>
+              <button
+                className="example-prompt"
+                onClick={() => {
+                  handleSendMessage("Give me a little fortune for today!");
+                }}
+              >
+                Give me a little fortune for today!
+              </button>
             </div>
           </div>
 
@@ -117,9 +79,8 @@ const App = () => {
         <div className="chat-footer">
           <ChatForm
             showChatbot={showChatbot}
-            chatHistory={chatHistory}
-            setChatHistory={setChatHistory}
-            generateBotResponse={generateBotResponse}
+            isLoading={isLoading}
+            onSendMessage={handleSendMessage}
           />
         </div>
       </div>
