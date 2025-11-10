@@ -195,7 +195,7 @@ body {
 }
 
 .chat-body .message .message-content {
-  padding: 12px 16px;
+  padding: 8px 12px;
   max-width: 75%;
   border-radius: 12px;
   word-break: break-word;
@@ -222,6 +222,30 @@ body {
 .chat-body .user-message .message-content {
   background-color: #4c6ef5;
   color: #fff;
+}
+
+.message-content .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+}
+
+.message-content .copy-button {
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9a9a9a;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.message-content .copy-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .chat-footer {
