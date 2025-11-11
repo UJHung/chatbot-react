@@ -1,34 +1,39 @@
 export const promptCategories = [
   {
-    category: "Ideas",
-    icon: "💡",
+    category: "Legal Q&A",
+    icon: "⚖️ ",
     prompts: [
-      "Help me come up with a startup idea",
-      "Give me an interesting story beginning",
-      "Design a unique character for a fantasy novel",
+      "Is unpaid overtime legal?",
+      "Who owns a design if the client didn’t pay?",
     ],
   },
   {
-    category: "Learning",
-    icon: "📚",
+    category: "Documents",
+    icon: "📄",
     prompts: [
-      "Explain the basic concepts of quantum mechanics",
-      "Teach me how to use React Hooks",
-      "How to learn a new language?",
+      "Draft a simple NDA",
+      "Summarize this contract in plain language.",
     ],
   },
   {
-    category: "Life",
-    icon: "🌟",
+    category: "Legal Knowledge",
+    icon: "🧠",
     prompts: [
-      "Give me a fortune for today",
-      "Recommend some healthy breakfasts",
-      "How to improve work efficiency?",
+      "Explain “intellectual property” in simple terms.",
+      "Tell me a law-related fun fact.",
+    ],
+  },
+  {
+    category: "Client Support",
+    icon: "💬",
+    prompts: [
+      "How can I book a lawyer consultation?",
+      "Where can I report a labor dispute?",
     ],
   },
 ];
 
 export const defaultPrompts = [
-  "Tell me something random and interesting!",
-  "Give me a little fortune for today!",
+  "Tell me who owns the copyright if a client uses my design without paying",
+  "Explain whether unpaid overtime is legal and what employees can do",
 ];
