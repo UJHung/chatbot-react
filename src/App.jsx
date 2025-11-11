@@ -1,17 +1,22 @@
 import { useState } from "react";
-
 import {
   IconX,
   IconMessageChatbotFilled,
   IconMinus,
+  IconTrash,
+  IconSparkles,
 } from "@tabler/icons-react";
 import ChatForm from "./components/Chatform";
 import ChatMessage from "./components/ChatMessage";
+import PromptLibrary from "./components/PromptLibrary";
 import useChat from "./hook/useChat";
+import { defaultPrompts } from "./data/prompts";
 
 const App = () => {
-  const { isLoading, chatHistory, chatBodyRef, handleSendMessage } = useChat();
+  const { isLoading, chatHistory, chatBodyRef, handleSendMessage, clearChat } =
+    useChat();
   const [showChatbot, setShowChatbot] = useState(false);
+  const [showPromptLibrary, setShowPromptLibrary] = useState(false);
 
   return (
     <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
@@ -30,49 +35,66 @@ const App = () => {
             <IconMessageChatbotFilled />
             <h2 className="logo-text">Chatbot</h2>
           </div>
-          <button
-            className="button-minimize"
-            onClick={() => setShowChatbot((prev) => !prev)}
-          >
-            <IconMinus size={16} />
-          </button>
+          <div className="header-actions">
+            <button
+              className="button-action"
+              onClick={() => setShowPromptLibrary(true)}
+              title="Quick Prompts"
+            >
+              <IconSparkles size={16} />
+            </button>
+            <button
+              className="button-action"
+              onClick={clearChat}
+              title="Clear Chat"
+            >
+              <IconTrash size={16} />
+            </button>
+            <button
+              className="button-action"
+              title="Minimize"
+              onClick={() => setShowChatbot((prev) => !prev)}
+            >
+              <IconMinus size={16} />
+            </button>
+          </div>
         </div>
 
         {/* Chatbot body */}
         <div ref={chatBodyRef} className="chat-body">
-          <div className="welcome-message">
-            <div className="welcome-icon">
-              <IconMessageChatbotFilled size="24" />
-            </div>
-            <h3>Hello, What can I help you today?</h3>
-            <p>
-              Choose a prompt below or type your own message to get started.
-            </p>
-            <div className="example-prompts">
+          {chatHistory.length === 0 ? (
+            <div className="welcome-message">
+              <div className="welcome-icon">
+                <IconMessageChatbotFilled size="24" />
+              </div>
+              <h3>Hello, What can I help you today?</h3>
+              <p>
+                Choose a prompt below or type your own message to get started.
+              </p>
+              <div className="example-prompts">
+                {defaultPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    className="example-prompt"
+                    onClick={() => handleSendMessage(prompt)}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
               <button
-                className="example-prompt"
-                onClick={() => {
-                  handleSendMessage(
-                    "Tell me something random and interesting!"
-                  );
-                }}
+                className="show-prompts-btn"
+                onClick={() => setShowPromptLibrary(true)}
               >
-                Tell me something random and interesting!
-              </button>
-              <button
-                className="example-prompt"
-                onClick={() => {
-                  handleSendMessage("Give me a little fortune for today!");
-                }}
-              >
-                Give me a little fortune for today!
+                <IconSparkles size={18} />
+                Show more prompts
               </button>
             </div>
-          </div>
-
-          {chatHistory.map((msg, index) => (
-            <ChatMessage key={index} message={msg} />
-          ))}
+          ) : (
+            chatHistory.map((msg, index) => (
+              <ChatMessage key={index} message={msg} />
+            ))
+          )}
         </div>
 
         {/* Chatbot footer */}
@@ -83,6 +105,14 @@ const App = () => {
             onSendMessage={handleSendMessage}
           />
         </div>
+
+        {/* Prompt Library Modal */}
+        {showPromptLibrary && (
+          <PromptLibrary
+            onSelectPrompt={handleSendMessage}
+            onClose={() => setShowPromptLibrary(false)}
+          />
+        )}
       </div>
     </div>
   );
