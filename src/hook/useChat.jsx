@@ -4,6 +4,21 @@ const useChat = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const chatBodyRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
+  const handleStopGeneration = (e) => {
+    e.preventDefault();
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      setIsLoading(false);
+
+      // 移除 "Thinking..." 訊息
+      setChatHistory((prevHistory) =>
+        prevHistory.filter((msg) => msg.text !== "Thinking...")
+      );
+    }
+  };
 
   // 更新聊天記錄（移除 "Thinking..." 並添加機器人回應）
   const updateHistory = (botText) => {
@@ -23,6 +38,8 @@ const useChat = () => {
       role,
       parts: [{ text }],
     }));
+
+    abortControllerRef.current = new AbortController();
 
     const requestOptions = {
       method: "POST",
@@ -46,7 +63,7 @@ const useChat = () => {
           temperature: 0.7,
           topK: 40,
           topP: 0.95,
-          maxOutputTokens: 1024,
+          maxOutputTokens: 2048,
         },
         // safetySettings: [
         //   {
@@ -59,6 +76,7 @@ const useChat = () => {
         //   },
         // ],
       }),
+      signal: abortControllerRef.current.signal, // 加入 signal
     };
 
     try {
@@ -78,8 +96,16 @@ const useChat = () => {
 
       updateHistory(botText);
     } catch (error) {
+      // 處理取消請求的情況
+      if (error.name === "AbortError") {
+        console.log("Request was cancelled by user");
+        return;
+      }
+
       console.error("Error fetching bot response:", error);
       updateHistory("Sorry, something went wrong. Please try again.");
+    } finally {
+      abortControllerRef.current = null;
     }
   };
 
@@ -110,6 +136,9 @@ const useChat = () => {
 
   // 清除聊天記錄
   const clearChat = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setChatHistory([]);
     setIsLoading(false);
   };
@@ -129,6 +158,7 @@ const useChat = () => {
     isLoading,
     chatBodyRef,
     handleSendMessage,
+    handleStopGeneration,
     clearChat,
   };
 };

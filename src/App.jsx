@@ -14,8 +14,14 @@ import useChat from "./hook/useChat";
 import { defaultPrompts } from "./data/prompts";
 
 const App = () => {
-  const { isLoading, chatHistory, chatBodyRef, handleSendMessage, clearChat } =
-    useChat();
+  const {
+    isLoading,
+    chatHistory,
+    chatBodyRef,
+    handleSendMessage,
+    handleStopGeneration,
+    clearChat,
+  } = useChat();
   const [showChatbot, setShowChatbot] = useState(false);
   const [showPromptLibrary, setShowPromptLibrary] = useState(false);
 
@@ -105,6 +111,7 @@ const App = () => {
             showChatbot={showChatbot}
             isLoading={isLoading}
             onSendMessage={handleSendMessage}
+            onStopGeneration={handleStopGeneration}
           />
         </div>
 
