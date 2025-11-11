@@ -9,6 +9,7 @@ import {
 import ChatForm from "./components/Chatform";
 import ChatMessage from "./components/ChatMessage";
 import PromptLibrary from "./components/PromptLibrary";
+import ChatIcon from "./components/ChatIcon";
 import useChat from "./hook/useChat";
 import { defaultPrompts } from "./data/prompts";
 
@@ -24,7 +25,7 @@ const App = () => {
         className="chatbot-toggler"
         onClick={() => setShowChatbot((prev) => !prev)}
       >
-        <IconMessageChatbotFilled className="icon-chatbot" />
+        <ChatIcon className="icon-chatbot" size={28} color="#ffffff" />
         <IconX className="icon-close" />
       </button>
 
@@ -32,8 +33,9 @@ const App = () => {
         {/* Chatbot header */}
         <div className="chat-header">
           <div className="header-info">
-            <IconMessageChatbotFilled />
-            <h2 className="logo-text">Chatbot</h2>
+            {/* <IconMessageChatbotFilled /> */}
+            <ChatIcon className="icon-chatbot" size={20} color="#4c6ef5" />
+            <h2 className="logo-text">AskLaw</h2>
           </div>
           <div className="header-actions">
             <button
