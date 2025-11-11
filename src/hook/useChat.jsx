@@ -42,6 +42,22 @@ const useChat = () => {
           },
           ...formattedHistory,
         ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+        // safetySettings: [
+        //   {
+        //     category: "HARM_CATEGORY_HARASSMENT", // 騷擾
+        //     threshold: "BLOCK_MEDIUM_AND_ABOVE",
+        //   },
+        //   {
+        //     category: "HARM_CATEGORY_HATE_SPEECH", // 仇恨言論
+        //     threshold: "BLOCK_MEDIUM_AND_ABOVE",
+        //   },
+        // ],
       }),
     };
 
