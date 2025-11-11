@@ -34,6 +34,6 @@ export const promptCategories = [
 ];
 
 export const defaultPrompts = [
-  "Tell me who owns the copyright if a client uses my design without paying",
   "Explain whether unpaid overtime is legal and what employees can do",
+  "Tell me who owns the copyright if a client uses my design without paying",
 ];
