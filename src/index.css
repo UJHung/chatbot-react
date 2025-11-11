@@ -190,7 +190,7 @@ body {
   border-radius: 12px;
   word-break: break-word;
   white-space: pre-line;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 }
 
 .chat-body .model-message .message-content {
@@ -202,8 +202,48 @@ body {
 .chat-body .model-message .message-content ul {
   display: flex;
   flex-direction: column;
+  justify-self: start;
+  align-items: start;
   padding-left: 16px;
   gap: 12px;
+}
+
+.chat-body .model-message .message-content ol li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-body .model-message .message-content ol li::before {
+  position: absolute;
+  list-style: decimal;
+  display: list-item;
+  margin-right: 8px;
+  content: "";
+}
+
+.chat-body .model-message .message-content ol li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-body .model-message .message-content ul li::before {
+  position: absolute;
+  list-style: circle;
+  display: list-item;
+  margin-right: 8px;
+  content: "";
+}
+
+.chat-body .model-message .message-content ul li ul li::before {
+  position: absolute;
+  list-style: disc;
+  display: list-item;
+  margin-right: 8px;
+  content: "";
 }
 
 .message-thinking {
