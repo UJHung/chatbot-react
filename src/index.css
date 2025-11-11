@@ -8,7 +8,7 @@
 body {
   width: 100%;
   min-height: 100vh;
-  background-color: ingredient(#f1f3f5, #e9ecef, #dee2e6);
+  background: linear-gradient(#f1f3f5, #e9ecef, #dee2e6);
   color: #212529;
   display: flex;
   align-items: center;
