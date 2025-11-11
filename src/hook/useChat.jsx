@@ -4,6 +4,21 @@ const useChat = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const chatBodyRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
+  const handleStopGeneration = (e) => {
+    e.preventDefault();
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      setIsLoading(false);
+
+      // 移除 "Thinking..." 訊息
+      setChatHistory((prevHistory) =>
+        prevHistory.filter((msg) => msg.text !== "Thinking...")
+      );
+    }
+  };
 
   // 更新聊天記錄（移除 "Thinking..." 並添加機器人回應）
   const updateHistory = (botText) => {
@@ -24,13 +39,44 @@ const useChat = () => {
       parts: [{ text }],
     }));
 
+    abortControllerRef.current = new AbortController();
+
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": import.meta.env.VITE_API_KEY,
       },
-      body: JSON.stringify({ contents: formattedHistory }),
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "model",
+            parts: [
+              {
+                text: "You are a helpful AI legal assistant specialized in U.S. law. Explain legal concepts clearly and neutrally, without giving personal opinions or legal advice.",
+              },
+            ],
+          },
+          ...formattedHistory,
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+        },
+        // safetySettings: [
+        //   {
+        //     category: "HARM_CATEGORY_HARASSMENT", // 騷擾
+        //     threshold: "BLOCK_MEDIUM_AND_ABOVE",
+        //   },
+        //   {
+        //     category: "HARM_CATEGORY_HATE_SPEECH", // 仇恨言論
+        //     threshold: "BLOCK_MEDIUM_AND_ABOVE",
+        //   },
+        // ],
+      }),
+      signal: abortControllerRef.current.signal, // 加入 signal
     };
 
     try {
@@ -50,8 +96,16 @@ const useChat = () => {
 
       updateHistory(botText);
     } catch (error) {
+      // 處理取消請求的情況
+      if (error.name === "AbortError") {
+        console.log("Request was cancelled by user");
+        return;
+      }
+
       console.error("Error fetching bot response:", error);
       updateHistory("Sorry, something went wrong. Please try again.");
+    } finally {
+      abortControllerRef.current = null;
     }
   };
 
@@ -82,6 +136,9 @@ const useChat = () => {
 
   // 清除聊天記錄
   const clearChat = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setChatHistory([]);
     setIsLoading(false);
   };
@@ -101,6 +158,7 @@ const useChat = () => {
     isLoading,
     chatBodyRef,
     handleSendMessage,
+    handleStopGeneration,
     clearChat,
   };
 };

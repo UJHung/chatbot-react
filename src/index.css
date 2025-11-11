@@ -8,7 +8,7 @@
 body {
   width: 100%;
   min-height: 100vh;
-  background-color: ingredient(#f1f3f5, #e9ecef, #dee2e6);
+  background: linear-gradient(#f1f3f5, #e9ecef, #dee2e6);
   color: #212529;
   display: flex;
   align-items: center;
@@ -160,6 +160,7 @@ body {
   flex: 1;
   padding: 12px 8px;
   border: none;
+  text-align: left;
   outline: #f0f0f0 1px solid;
   background-color: #f7f7f7;
   border-radius: 8px;
@@ -195,6 +196,14 @@ body {
 .chat-body .model-message .message-content {
   background-color: #f7f7f7;
   border: 1px solid #f0f0f0;
+}
+
+.chat-body .model-message .message-content ol,
+.chat-body .model-message .message-content ul {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+  gap: 12px;
 }
 
 .message-thinking {
@@ -365,6 +374,7 @@ body {
   gap: 0.5rem;
   overflow-x: auto;
   padding: 1rem 0;
+  flex-wrap: wrap;
 }
 
 .category-btn {
