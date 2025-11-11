@@ -30,7 +30,19 @@ const useChat = () => {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": import.meta.env.VITE_API_KEY,
       },
-      body: JSON.stringify({ contents: formattedHistory }),
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "model",
+            parts: [
+              {
+                text: "You are a helpful AI legal assistant. You provide clear, neutral, and accurate explanations of legal concepts in simple language. Avoid giving personal opinions or legal advice; focus on helping users understand legal information.",
+              },
+            ],
+          },
+          ...formattedHistory,
+        ],
+      }),
     };
 
     try {
