@@ -2,12 +2,7 @@ import { useRef, useEffect } from "react";
 
 import { IconArrowUp } from "@tabler/icons-react";
 
-const ChatForm = ({
-  showChatbot,
-  chatHistory,
-  setChatHistory,
-  generateBotResponse,
-}) => {
+const ChatForm = ({ showChatbot, onSendMessage, isLoading }) => {
   const inputRef = useRef(null);
 
   const handleSubmit = (e) => {
@@ -17,33 +12,17 @@ const ChatForm = ({
 
     inputRef.current.value = "";
 
-    // Update chat history with the new user message
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
-      { role: "user", text: input },
-    ]);
-
-    setTimeout(() => {
-      // Update chat history with bot "Thinking..." message
-      setChatHistory((prevHistory) => [
-        ...prevHistory,
-        { role: "model", text: "Thinking..." },
-      ]);
-
-      // Call generateBotResponse with updated chat history
-      generateBotResponse([...chatHistory, { role: "user", text: input }]);
-    }, 500);
+    onSendMessage(input);
   };
 
   useEffect(() => {
-    // Clear input field when chatbot is shown
     if (showChatbot) {
-      inputRef.current.value = "";
+      inputRef.current?.focus();
     }
   }, [showChatbot]);
 
   return (
-    <form action="#" className="chat-form" onSubmit={handleSubmit}>
+    <form className="chat-form" onSubmit={handleSubmit}>
       <input
         name="message"
         ref={inputRef}
@@ -52,8 +31,8 @@ const ChatForm = ({
         className="message-input"
         required
       />
-      <button type="submit" className="send-button">
-        <IconArrowUp />
+      <button type="submit" className="send-button" disabled={isLoading}>
+        <IconArrowUp size={20} />
       </button>
     </form>
   );
