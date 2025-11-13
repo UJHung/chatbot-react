@@ -223,11 +223,8 @@ body {
   content: "";
 }
 
-.chat-body .model-message .message-content ol li {
+.chat-body .model-message .message-content ul li {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .chat-body .model-message .message-content ul li::before {
@@ -236,6 +233,10 @@ body {
   display: list-item;
   margin-right: 8px;
   content: "";
+}
+
+.chat-body .model-message .message-content ul li ul li {
+  position: relative;
 }
 
 .chat-body .model-message .message-content ul li ul li::before {
